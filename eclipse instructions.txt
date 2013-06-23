@@ -1,0 +1,1 @@
+If you're adding mine modus to your eclipse environment, copy the mods and vtsman folders into a new source folder. If all goes feel, you should be up and running!
