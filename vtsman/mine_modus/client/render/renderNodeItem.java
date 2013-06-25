@@ -35,27 +35,33 @@ public class renderNodeItem implements IItemRenderer
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
+		if(item.getTagCompound() != null){
+		if(item.getTagCompound().hasKey("Type") && item.getTagCompound().hasKey("Capacity")){
+		float rad = (float)(vtsman.mine_modus.tileentity.node.getRenderRadius(item.stackTagCompound.getInteger("Capacity"), item.stackTagCompound.getInteger("Type")));
 		switch(type)
 		{
 			case ENTITY:{
-				render(0f, 0f, 0f, 1.2f * (float)(vtsman.mine_modus.tileentity.node.getRenderRadius(item.stackTagCompound.getInteger("Capacity"), item.stackTagCompound.getString("Type"))));
+				render(0f, 0f, 0f, 1.2f * rad);
 				return;
 			}
 			
 			case EQUIPPED:{
-				render(0f, 0f, 0f, 1.2f * (float)(vtsman.mine_modus.tileentity.node.getRenderRadius(item.stackTagCompound.getInteger("Capacity"), item.stackTagCompound.getString("Type"))));
+				render(0f, 0f, 0f, 1.2f * rad);
 
 				return;
 			}
 				
 			case INVENTORY:{
-				render(0f, 0f, 0f, 1.2f * (float)(vtsman.mine_modus.tileentity.node.getRenderRadius(item.stackTagCompound.getInteger("Capacity"), item.stackTagCompound.getString("Type"))));
+				render(0f, 0f, 0f, 1.2f * rad);
 
 				return;
 			}
-			
+		
 			default:return;
 		}
+		}
+		}
+		render(0f, 0f, 0f, 1.2f);
 	}
 	
 	private void render(float x, float y, float z, float scale)

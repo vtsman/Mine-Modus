@@ -25,13 +25,13 @@ public class debug_add_energy extends Item{
 	    if((node)world.getBlockTileEntity(x, y, z) != null && !world.isRemote){
 	    	node Node = (node)world.getBlockTileEntity(x, y, z);
 	    	if(Node != null){
-	    	if(Node.type.getType() == "Energy"){
+	    	if(Node.type == "Energy"){
 	    		Node.addEnergy(5);
 	    	}
-	    	if(Node.type.getType() == "Item"){
+	    	if(Node.type == "Item"){
 	    		Node.addItems(new ItemStack(Block.stone, 5));
 	    	}
-	    	if(Node.type.getType() == "Liquid"){
+	    	if(Node.type == "Liquid"){
 	    		LiquidStack liquidstack = new LiquidStack(Block.waterStill, LiquidContainerRegistry.BUCKET_VOLUME/100);
 	    		Node.addLiquid(liquidstack);
 	    	}

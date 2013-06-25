@@ -1,5 +1,6 @@
 package vtsman.mine_modus.client.render;
 
+import vtsman.mine_modus.baseMod;
 import vtsman.mine_modus.tileentity.Quantum_Materializer_TE;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
@@ -66,9 +67,8 @@ public void renderTileEntityAt(TileEntity tileentity, double d0, double d1,
    // this.entityitem.setPosition((double)d0, (double)d1, (double)d2);
     entityitem.hoverStart = 2.0F;
 	this.renderAModelAt(TE, d0, d1, d2, f);
-
+	//entityitem.setPositionAndRotation((double)d0, (double)d1, (double)d2, 0, TE.angle);
     
-	 entityitem.setEntityItemStack(new ItemStack(Block.blockRedstone, 1));
 	 GL11.glTranslated(d0 + 0.5d, d1 + 0.25D, d2+ 0.5d);
 		if(tileentity.worldObj != null){
 
@@ -76,7 +76,8 @@ public void renderTileEntityAt(TileEntity tileentity, double d0, double d1,
 				 entityitem.setEntityItemStack(new ItemStack(TE.getStackInSlot(0).itemID, 1, TE.getStackInSlot(0).getItemDamage()));
 				 
 				renderitem.doRenderItem(entityitem, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
-				 }
+				GL11.glRotatef((float)TE.angle/(float)360, 1, 0, 0);
+			 }
 			 }
 	GL11.glScaled(1.0D / 1, 1.0D / 1, 1.0D / 1);
 	GL11.glTranslated(-1 * (d0 + 0.5d), (d1 + 0.25D) * -1, -1 * (d2+ 0.5d));

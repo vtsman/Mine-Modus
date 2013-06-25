@@ -5,7 +5,6 @@ import java.util.Random;
 
 import org.bouncycastle.util.encoders.Hex;
 
-import vtsman.mine_modus.tileentity.nodetype;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBreakable;
 import net.minecraft.block.ITileEntityProvider;
@@ -66,7 +65,7 @@ public class node extends Block{
                     float f2 = this.random.nextFloat() * 0.8F + 0.1F;
                     EntityItem entityitem;
                     ItemStack stack = new ItemStack(this.blockID, 1, par1World.getBlockMetadata(par2, par3, par4));
-                    this.setNBT(stack, this.TE.type.getType(), this.TE.type.getRange(), this.TE.type.getCapacity());     
+                    this.setNBT(stack, this.TE.type, this.TE.range, this.TE.capacity);     
                         entityitem = new EntityItem(par1World, (double)((float)par2 + f), (double)((float)par3 + f1), (double)((float)par4 + f2), stack);
                         float f3 = 0.05F;
                         entityitem.motionX = (double)((float)this.random.nextGaussian() * f3);
@@ -96,9 +95,23 @@ public class node extends Block{
 		this.setNBT(stack, "Energy", 10, 10000);
 		par3List.add(stack);
     }
+	public static int intType(String type){
+		if(type == "Energy")return 0;
+		if(type == "Liquid")return 1;
+		if(type == "Item")return 2;
+		return 0;
+	}
+	public static String strType(int t){
+		switch(t){
+		case 0: return "Energy";
+		case 1: return "Liquid";
+		case 2: return "Item";
+		}
+		return null;
+	}
 	public static void setNBT(ItemStack stack, String type, int range, int capacity){
 		stack.stackTagCompound = new NBTTagCompound();
-		stack.stackTagCompound.setString("Type", type);
+		stack.stackTagCompound.setInteger("Type", intType(type));
 		stack.stackTagCompound.setInteger("Range", range);
 		stack.stackTagCompound.setInteger("Capacity", capacity);
 	}
@@ -113,9 +126,6 @@ public class node extends Block{
 		float f = .5f;
 		this.setBlockBounds(rad * -1 + f, rad * -1 + f, rad * -1 + f, rad + f, rad + f, rad + f);
 	}*/
-	public nodetype getType(){
-		return TE.type;
-	}
     public TileEntity createTileEntity(World world, int meta)
     {
     	TE = new vtsman.mine_modus.tileentity.node();

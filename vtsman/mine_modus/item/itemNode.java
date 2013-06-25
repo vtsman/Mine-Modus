@@ -29,7 +29,7 @@ public class itemNode extends ItemBlock{
 					NBTTagCompound tag = stack.getTagCompound();
 					if (tag != null) {
 						//System.out.printf("ItemShape.onItemUse: initialising TEShape\n");
-						te.setType(tag.getString("Type"), tag.getInteger("Range"), tag.getInteger("Capacity"));
+						te.setType(vtsman.mine_modus.block.node.strType(tag.getInteger("Type")), tag.getInteger("Range"), tag.getInteger("Capacity"));
 					}
 				}
 				return true;

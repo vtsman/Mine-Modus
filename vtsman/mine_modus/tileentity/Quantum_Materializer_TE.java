@@ -27,48 +27,7 @@ public class Quantum_Materializer_TE extends TileEntity implements IInventory{
 		NBTTagCompound tag = new NBTTagCompound();
 		int maxDistance = 200;
         private ItemStack[] inv;
-        private void sendPacket(){
-        	if(!this.worldObj.isRemote){
-        	byte[] out = null;
-        	this.writeToNBT(tag);
-
-    		try {
-    			out = CompressedStreamTools.compress(tag);
-    		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
-       	 ByteArrayOutputStream bos = new ByteArrayOutputStream(out.length);
-         DataOutputStream outputStream = new DataOutputStream(bos);
-        	Packet250CustomPayload packet = new Packet250CustomPayload();
-            packet.channel = "MineModus TE";
-            try {
-    			outputStream.writeShort(out.length);
-    			outputStream.write(out);
-    		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
-            packet.data = bos.toByteArray();
-            packet.length = bos.size();
-            if (packet != null) {
-    			for (int j = 0; j < this.worldObj.playerEntities.size(); j++) {
-    				EntityPlayerMP player = null;//
-    				if(this.worldObj.playerEntities.get(j) instanceof EntityPlayerMP){
-    				player = (EntityPlayerMP) this.worldObj.playerEntities.get(j);
-    				System.out.println("PlayerMP!");
-    				}
-    				if(player != null){
-    				if (Math.abs(player.posX - this.xCoord) <= maxDistance && Math.abs(player.posY - this.yCoord) <= maxDistance && Math.abs(player.posZ - this.zCoord) <= maxDistance) {
-    					PacketDispatcher.sendPacketToPlayer(packet, (Player) player);
-    					//player.playerNetServerHandler.sendPacketToPlayer(packet);
-    				}
-    				}
-    			}
-    		}
-        	}
-             // We are on the Bukkit server.
-        }
+        
         
         public Quantum_Materializer_TE(){
                 inv = new ItemStack[1];
@@ -92,16 +51,7 @@ public class Quantum_Materializer_TE extends TileEntity implements IInventory{
         	sendPacket();
         	return fakeStack;
         }
-        @Override
-        public void updateEntity(){
-        	if(this.worldObj != null){
-        		if(!this.worldObj.isRemote&&this.tick == 100){
-        			this.sendPacket();
-        			tick = 0;
-        		}
-        		tick++;
-        	}
-        }
+
         @Override
         public void setInventorySlotContents(int slot, ItemStack stack) {
                 inv[slot] = stack;
@@ -109,6 +59,7 @@ public class Quantum_Materializer_TE extends TileEntity implements IInventory{
                         stack.stackSize = getInventoryStackLimit();
                 }               
             	sendPacket();
+            	
         }
 
         @Override
@@ -153,7 +104,65 @@ public class Quantum_Materializer_TE extends TileEntity implements IInventory{
 
         @Override
         public void closeChest() {}
-        
+        private void sendPacket(){
+        	if(this.worldObj != null){
+        	if(!this.worldObj.isRemote){
+        	byte[] out = null;
+        	this.writeToNBT(tag);
+
+    		try {
+    			out = CompressedStreamTools.compress(tag);
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+       	 ByteArrayOutputStream bos = new ByteArrayOutputStream(out.length);
+         DataOutputStream outputStream = new DataOutputStream(bos);
+        	Packet250CustomPayload packet = new Packet250CustomPayload();
+            packet.channel = "MineModus TE";
+            try {
+    			outputStream.writeShort(out.length);
+    			outputStream.write(out);
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+            packet.data = bos.toByteArray();
+            packet.length = bos.size();
+            if (packet != null) {
+    			for (int j = 0; j < this.worldObj.playerEntities.size(); j++) {
+    				EntityPlayerMP player = null;//
+    				if(this.worldObj.playerEntities.get(j) instanceof EntityPlayerMP){
+    				player = (EntityPlayerMP) this.worldObj.playerEntities.get(j);
+    				System.out.println("PlayerMP!");
+    				}
+    				if(player != null){
+    				if (Math.abs(player.posX - this.xCoord) <= maxDistance && Math.abs(player.posY - this.yCoord) <= maxDistance && Math.abs(player.posZ - this.zCoord) <= maxDistance) {
+    					PacketDispatcher.sendPacketToPlayer(packet, (Player) player);
+    					//player.playerNetServerHandler.sendPacketToPlayer(packet);
+    				}
+    				}
+    			}
+    		}
+        	}
+        	}
+             // We are on the Bukkit server.
+        }
+        public int angle = 0;
+        @Override
+        public void updateEntity(){
+        	if(this.worldObj != null){
+        		if(!this.worldObj.isRemote&&this.tick == 100){
+        			this.sendPacket();
+        			tick = 0;
+        		}
+        		else{
+        			angle++;
+        			if(angle >= 360)angle = 0;
+        		}
+        		tick++;
+        	}
+        }
         @Override
         public void readFromNBT(NBTTagCompound tagCompound) {
                 super.readFromNBT(tagCompound);

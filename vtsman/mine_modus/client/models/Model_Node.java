@@ -34,10 +34,10 @@ public class Model_Node extends ModelBase
 
 		// Move the object into the correct position on the block (because the OBJ's origin is the center of the object)
 		GL11.glTranslatef((float)x + 0.5f, (float)y + 0.5f, (float)z + 0.5f);
-		
+		float rad = (float)tile.getRenderRadius(tile.capacity, vtsman.mine_modus.block.node.intType(tile.type));
 		// Scale our object to about half-size in all directions (the OBJ file is a little large)
 		if(tile.type != null){
-		GL11.glScalef(1.2f * (float)tile.type.getRadius(), 1.2f * (float)tile.type.getRadius(), 1.2f * (float)tile.type.getRadius());
+		GL11.glScalef(1.2f * rad, 1.2f * rad, 1.2f * rad);
 		}
 		else{
 			GL11.glScalef(1.2f, 1.2f, 1.2f);

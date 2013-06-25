@@ -22,13 +22,14 @@ public class itemInformationScanner extends Item{
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
 	{
 		DecimalFormat df = new DecimalFormat("#.##");
-	    if((node)world.getBlockTileEntity(x, y, z) != null && !world.isRemote){
+		if(!world.isRemote){
+			System.out.println(1);
+	    if((node)world.getBlockTileEntity(x, y, z) != null){
 	    	node Node = (node)world.getBlockTileEntity(x, y, z);
-	    	
-	    	
-	    	if(Node.type.getType() == "Liquid"){
+	    	final String s = Node.type;
+	    	if(s == "Liquid"){
 	    		if(Node.liquid != null){
-	    		player.addChatMessage("This node contains " + Node.liquid.amount + " out of " + Node.type.getCapacity() + " of " + Item.itemsList[Node.liquid.itemID].func_77653_i(new ItemStack(Item.itemsList[Node.liquid.itemID], 1, Node.liquid.itemMeta)));
+	    		player.addChatMessage("This node contains " + Node.liquid.amount + " out of " + Node.capacity + " of " + Item.itemsList[Node.liquid.itemID].func_77653_i(new ItemStack(Item.itemsList[Node.liquid.itemID], 1, Node.liquid.itemMeta)));
 	    		return true;
 	    		}
 	    		else{
@@ -37,9 +38,9 @@ public class itemInformationScanner extends Item{
 	    		}
 	    		
 	    	}
-	    	if(Node.type.getType() == "Item"){
+	    	if(s == "Item"){
 	    	if(Node.itemstack != null){
-	    		player.addChatMessage("This node contains " + Node.itemstack.stackSize + " " + Node.itemstack.getItem().func_77653_i(Node.itemstack));
+	    		player.addChatMessage("This node contains " + Node.itemstack.stackSize + " out of " + Node.capacity + " of " + Node.itemstack.getItem().func_77653_i(Node.itemstack));
 	    		return true;
 	    		}
 	    		else{
@@ -47,9 +48,14 @@ public class itemInformationScanner extends Item{
 	    			return true;
 	    		}
 	    	}
-	    	if(Node.type.getType() == "Energy")player.addChatMessage("Energy: " + df.format(Node.energy) + " out of " + Node.type.getCapacity());
+	    	if(s == "Energy"){
+	    		System.out.println("here!");
+	    		player.addChatMessage("Energy: " + df.format(Node.energy) + " out of " + Node.capacity);
+	    	}
+	    	//player.addChatMessage("Invalid node");
 	    	return true;
 	    }
+		}
 		return false;
 	}
     @Override

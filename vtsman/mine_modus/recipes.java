@@ -21,6 +21,7 @@ GameRegistry.addShapedRecipe(new ItemStack(modItems.upgrade, 1, 2), "RIR", "ICI"
 
 GameRegistry.addShapedRecipe(new ItemStack(modItems.dustRuby, 1, 0), " R ", "RSR", " R ", 'R', Item.redstone, 'S', Block.sand);
 GameRegistry.addShapedRecipe(new ItemStack(modBlocks.led, 32, 0), "G", "R", "T", 'R', Item.redstone, 'G', Item.lightStoneDust, 'T', modItems.ingotTitanium);
+GameRegistry.addShapedRecipe(new ItemStack(modBlocks.qm, 1, 0), " T ", "GRG", "TTT", 'T', modItems.ingotTitanium, 'R', modItems.ruby, 'G', Block.thinGlass);
 GameRegistry.addSmelting(modItems.dustRuby.itemID, new ItemStack(modItems.ruby, 1, 0), 0.05f);
 GameRegistry.addSmelting(modItems.chunkTitanium.itemID, new ItemStack(modItems.ingotTitanium, 1, 0), 0.05f);
 initBC();

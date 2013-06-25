@@ -6,8 +6,6 @@ import java.io.IOException;
 
 import javax.management.ReflectionException;
 
-import buildcraft.core.network.PacketTileUpdate;
-
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 
@@ -44,7 +42,6 @@ try {
 }
 if(tag != null){
 if(tag.hasKey("x") && tag.hasKey("y") && tag.hasKey("z")){
-	System.out.println("has x, y, z");
 	int x = tag.getInteger("x");
 	int y = tag.getInteger("y");
 	int z = tag.getInteger("z");
