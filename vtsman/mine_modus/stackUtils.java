@@ -17,4 +17,8 @@ public class stackUtils {
 	public static boolean stackEquals(ItemStack s1, ItemStack s2){
 		return (s1.stackSize == s2.stackSize) && (s1.itemID == s2.itemID) && (s1.getItemDamage() == s2.getItemDamage());
 	}
+	public static boolean canStack(ItemStack s1, ItemStack s2){
+		return (s1.itemID == s2.itemID) && (s1.getItemDamage() == s2.getItemDamage());
+
+	}
 }

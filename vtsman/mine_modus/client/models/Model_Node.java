@@ -1,6 +1,7 @@
 package vtsman.mine_modus.client.models;
 
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
@@ -43,8 +44,9 @@ public class Model_Node extends ModelBase
 			GL11.glScalef(1.2f, 1.2f, 1.2f);
 		}
 		// Bind the texture, so that OpenGL properly textures our block.
-		FMLClientHandler.instance().getClient().renderEngine.bindTexture("/vtsman/mine_modus/client/models/temp.png");
-
+		//FMLClientHandler.instance().getClient().renderEngine.("/vtsman/mine_modus/client/models/temp.png");
+		//FMLClientHandler.instance().getClient().renderEngine.func_110577_a((new ResourceLocation("/vtsman/mine_modus/client/models/temp.png")));
+		//FMLClientHandler.instance().getClient().renderEngine.bindTexture();
 		// Render the object, using modelTutBox.renderAll();
 		this.render();
 

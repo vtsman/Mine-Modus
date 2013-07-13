@@ -23,13 +23,17 @@ public class itemInformationScanner extends Item{
 	{
 		DecimalFormat df = new DecimalFormat("#.##");
 		if(!world.isRemote){
-			System.out.println(1);
-	    if((node)world.getBlockTileEntity(x, y, z) != null){
-	    	node Node = (node)world.getBlockTileEntity(x, y, z);
+	    	node Node = null;
+	    	if(world.getBlockTileEntity(x, y, z) instanceof node)Node = (node)world.getBlockTileEntity(x, y, z);
+	    	if(Node != null){
+	    		switch(world.getBlockMetadata(x, y, z)){
+	    		case 0: player.addChatMessage("Normal Node");
+	    		case 1: player.addChatMessage("Interface Node");
+	    		}
 	    	final String s = Node.type;
 	    	if(s == "Liquid"){
 	    		if(Node.liquid != null){
-	    		player.addChatMessage("This node contains " + Node.liquid.amount + " out of " + Node.capacity + " of " + Item.itemsList[Node.liquid.itemID].func_77653_i(new ItemStack(Item.itemsList[Node.liquid.itemID], 1, Node.liquid.itemMeta)));
+	    		player.addChatMessage("This node contains " + Node.liquid.amount + " out of " + Node.capacity + " of " + Item.itemsList[Node.liquid.fluidID].getUnlocalizedName());
 	    		return true;
 	    		}
 	    		else{
@@ -38,9 +42,9 @@ public class itemInformationScanner extends Item{
 	    		}
 	    		
 	    	}
-	    	if(s == "Item"){
+	    	else if(s == "Item"){
 	    	if(Node.itemstack != null){
-	    		player.addChatMessage("This node contains " + Node.itemstack.stackSize + " out of " + Node.capacity + " of " + Node.itemstack.getItem().func_77653_i(Node.itemstack));
+	    		player.addChatMessage("This node contains " + Node.itemstack.stackSize + " out of " + Node.capacity + " of " + Node.itemstack.getItem().getUnlocalizedName());
 	    		return true;
 	    		}
 	    		else{
@@ -48,11 +52,12 @@ public class itemInformationScanner extends Item{
 	    			return true;
 	    		}
 	    	}
-	    	if(s == "Energy"){
-	    		System.out.println("here!");
+	    	else if(s == "Energy"){
 	    		player.addChatMessage("Energy: " + df.format(Node.energy) + " out of " + Node.capacity);
 	    	}
-	    	//player.addChatMessage("Invalid node");
+	    	else{
+	    		player.addChatMessage("Oh noes! This node doesn't look right >.<");
+	    	}
 	    	return true;
 	    }
 		}

@@ -20,6 +20,7 @@ import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import vtsman.mine_modus.block.*;
 import vtsman.mine_modus.client.ClientPacketHandler;
 import vtsman.mine_modus.client.clientProxy;
@@ -28,12 +29,12 @@ import vtsman.mine_modus.worldGen.modGen;
 @NetworkMod(clientSideRequired=true,serverSideRequired=false, //Whether client side and server side are needed
 clientPacketHandlerSpec = @SidedPacketHandler(channels = {"MineModus TE"}, packetHandler = ClientPacketHandler.class), //For clientside packet handling
 serverPacketHandlerSpec = @SidedPacketHandler(channels = {"MineModusServer"}, packetHandler = ServerPacketHandler.class)) //For serverside packet handling
-@Mod(modid="mine modus",name="Mine Modus",version="0.0.0")
+@Mod(modid="minemodus",name="Mine Modus",version="0.1.0")
 public class baseMod { //The class file
 	public modBlocks modBlocks = new modBlocks();
 	public static vtsman.mine_modus.item.modItems modItems = new vtsman.mine_modus.item.modItems();
 	public creativeTabs tabs = new creativeTabs();
-@Instance("mine modus") //The instance, this is very important later on
+@Instance("minemodus") //The instance, this is very important later on
 public static baseMod instance = new baseMod();
 @SidedProxy(clientSide = "vtsman.mine_modus.client.clientProxy", serverSide = "vtsman.mine_modus.commonProxy")
 public static commonProxy proxy;
@@ -44,9 +45,10 @@ this.modBlocks.registerBlocks();
 this.modItems.init();
 tabs.init();
 modGen.init();
+proxy.registerRenderInformation();
 //nodeRecipeManager.init();
-clientProxy.registerRenderInformation();
 }
+
 @PostInit
 public static void postInit(FMLPostInitializationEvent event){
 	recipes.init();

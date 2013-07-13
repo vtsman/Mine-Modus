@@ -29,6 +29,7 @@ public void onPacketData(INetworkManager manager, Packet250CustomPayload payload
 DataInputStream data = new DataInputStream(new ByteArrayInputStream(payload.data));
 World world = ((EntityPlayer)player).worldObj;
 if(payload.channel == "MineModus TE"){
+	System.out.println("Packet Recieved");
 NBTTagCompound tag = null;
 short length;
 try {
@@ -36,6 +37,7 @@ try {
 	byte[] compressed = new byte[length];
 	data.readFully(compressed);
 	tag = CompressedStreamTools.decompress(compressed);
+	System.out.println("Tag decompressed");
 } catch (IOException e) {
 	// TODO Auto-generated catch block
 	e.printStackTrace();

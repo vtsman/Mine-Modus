@@ -11,6 +11,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -73,12 +74,15 @@ public class node extends Block{
                         par1World.spawnEntityInWorld(entityitem);
         super.breakBlock(par1World, par2, par3, par4, par5, par6);
     }
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving player, ItemStack stack) {
-		lastTE = (vtsman.mine_modus.tileentity.node)world.getBlockTileEntity(x, y, z);
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) 
+	{
+	lastTE = (vtsman.mine_modus.tileentity.node)world.getBlockTileEntity(x, y, z);
+	
 	}
 	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
+		//normal nodes
 		ItemStack stack = new ItemStack(this.blockID, 1, 0);
 		this.setNBT(stack, "Energy", 20, 1000);
 		par3List.add(stack);
@@ -92,6 +96,22 @@ public class node extends Block{
 		this.setNBT(stack, "Energy", 10, 100);
 		par3List.add(stack);
 		stack = new ItemStack(this.blockID, 1, 0);
+		this.setNBT(stack, "Energy", 10, 10000);
+		par3List.add(stack);
+		//interface nodes
+		stack = new ItemStack(this.blockID, 1, 1);
+		this.setNBT(stack, "Energy", 20, 1000);
+		par3List.add(stack);
+		stack = new ItemStack(this.blockID, 1, 1);
+		this.setNBT(stack, "Liquid", 10, 400);
+		par3List.add(stack);
+		stack = new ItemStack(this.blockID, 1, 1);
+		this.setNBT(stack, "Item", 10, 64);
+		par3List.add(stack);
+		stack = new ItemStack(this.blockID, 1, 1);
+		this.setNBT(stack, "Energy", 10, 100);
+		par3List.add(stack);
+		stack = new ItemStack(this.blockID, 1, 1);
 		this.setNBT(stack, "Energy", 10, 10000);
 		par3List.add(stack);
     }
@@ -122,13 +142,18 @@ public class node extends Block{
     }
 	/*public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4) {
 		int meta = par1IBlockAccess.getBlockMetadata(par2, par3, par4);
-		float rad = (float) TE.type.getRadius();
+		float rad = (float) TE.getRenderRadius(TE.capacity, intType(TE.type));
 		float f = .5f;
 		this.setBlockBounds(rad * -1 + f, rad * -1 + f, rad * -1 + f, rad + f, rad + f, rad + f);
 	}*/
     public TileEntity createTileEntity(World world, int meta)
     {
-    	TE = new vtsman.mine_modus.tileentity.node();
+    	switch(meta){
+    	case 0: System.out.println("normal"); 
+    		TE = new vtsman.mine_modus.tileentity.node();
+    	case 1: System.out.println("interface");
+    		TE = new vtsman.mine_modus.tileentity.interfaceNode();
+    	}
         return TE;
     }
 

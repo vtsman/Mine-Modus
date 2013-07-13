@@ -19,15 +19,15 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.ModLoader;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.liquids.LiquidStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fluids.FluidStack;
 
-public class node extends TileEntity{
+public class node extends TileEntity implements INode{
 	private NBTTagCompound tag = new NBTTagCompound();
 	public ItemStack itemstack;
 	public double energy = 0;
-	public LiquidStack liquid;
+	public FluidStack liquid;
 	String network = "Any";
 	int tick = 100;
 	int length = 0;
@@ -45,7 +45,7 @@ public class node extends TileEntity{
 	@Override
 	 public void readFromNBT(NBTTagCompound data)
 	    {
-	        super.readFromNBT(data);
+	        //super.readFromNBT(data);
 			data.setInteger("x", this.xCoord);
 			data.setInteger("y", this.yCoord);
 			data.setInteger("z", this.zCoord);
@@ -65,7 +65,7 @@ public class node extends TileEntity{
 				id = data.getInteger("LiquidID");
 				amount = data.getInteger("LiquidAmount");
 				meta = data.getInteger("LiquidMeta");
-				this.liquid = new LiquidStack(id, amount, meta);
+				this.liquid = new FluidStack(id, amount);
 			}
 			
 			this.energy = data.getDouble("energy");
@@ -77,7 +77,7 @@ public class node extends TileEntity{
 	     */
 	 @Override
 		public void writeToNBT(NBTTagCompound data) {
-		 		super.writeToNBT(data);
+		 		//super.writeToNBT(data);
 		 		
 		 		if(this.itemstack != null){
 			 		data.setInteger("ItemID", this.itemstack.itemID);
@@ -85,10 +85,8 @@ public class node extends TileEntity{
 			 		data.setInteger("ItemMeta", this.itemstack.getItemDamage());
 		 		}
 		 		if(this.liquid != null){
-			 		data.setInteger("LiquidID", this.liquid.itemID);
-			 		data.setInteger("LiquidAmount", this.liquid.amount);
-			 		data.setInteger("LiquidMeta", this.liquid.itemMeta);
-		 		}
+			 		data.setInteger("LiquidID", this.liquid.getFluid().getBlockID());
+			 		data.setInteger("LiquidAmount", this.liquid.amount);		 		}
 		 		
 				data.setDouble("energy", this.energy);
 				data.setInteger("Type", vtsman.mine_modus.block.node.intType(this.type));
@@ -98,44 +96,62 @@ public class node extends TileEntity{
 				data.setInteger("y", this.yCoord);
 				data.setInteger("z", this.zCoord);
 		}
-	public static double getRenderRadius(int n, int type){
-    	if(type == 2) return (Math.pow(n/64, 1.0/3.0)) * .4;
-
-    	if(type == 1) return (Math.pow(n/1000, 1.0/3.0)) * .4;
-    	
-    	if(type == 0) return (Math.pow(n/100, 1.0/3.0)) * .2;
-    	return 0;
-    }
-    public void setType(String Type, int range, int capacity){
-    	this.type = Type;
-    	this.range = range;
-    	this.capacity = capacity;
-    }
-    private void sendPacket(){
-    	if(!this.worldObj.isRemote){
-    	byte[] out = null;
-    	this.writeToNBT(tag);
-
+	public void updateEntity()
+	{
+	    if (this.worldObj != null && !this.worldObj.isRemote && this.type != null)
+	    {
+	        if(tick == 100){
+	        	tick = 0;
+	        	this.getNetwork();
+	        	sendPacket();
+	        }
+	        if(this.type == "Energy"){
+	        	this.sendEnergy();
+	        }
+	        else if(this.type == "Liquid"){
+	        	this.sendLiquid();
+	        }
+	        else if(this.type == "Item"){
+	        	this.sendItems();
+	        }
+	        tick++;
+	        if(this.itemstack != null){
+	        	if(this.itemstack.stackSize == 0){
+	        		this.itemstack = null;
+	        	}
+	        }
+	        if(this.liquid != null){
+	        	if(this.liquid.amount == 0){
+	        		this.liquid = null;
+	        	}
+	        }
+	    }
+	}
+	protected void sendPacket(){
+		if(!this.worldObj.isRemote){
+		byte[] out = null;
+		this.writeToNBT(tag);
+	
 		try {
 			out = CompressedStreamTools.compress(tag);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-   	 ByteArrayOutputStream bos = new ByteArrayOutputStream(out.length);
-     DataOutputStream outputStream = new DataOutputStream(bos);
-    	Packet250CustomPayload packet = new Packet250CustomPayload();
-        packet.channel = "MineModus TE";
-        try {
+	 ByteArrayOutputStream bos = new ByteArrayOutputStream(out.length);
+	 DataOutputStream outputStream = new DataOutputStream(bos);
+		Packet250CustomPayload packet = new Packet250CustomPayload();
+	    packet.channel = "MineModus TE";
+	    try {
 			outputStream.writeShort(out.length);
 			outputStream.write(out);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        packet.data = bos.toByteArray();
-        packet.length = bos.size();
-        if (packet != null) {
+	    packet.data = bos.toByteArray();
+	    packet.length = bos.size();
+	    if (packet != null) {
 			for (int j = 0; j < this.worldObj.playerEntities.size(); j++) {
 				EntityPlayerMP player = null;//
 				if(this.worldObj.playerEntities.get(j) instanceof EntityPlayerMP){
@@ -150,43 +166,24 @@ public class node extends TileEntity{
 				}
 			}
 		}
-        System.out.println("sent packet");
-    	}
-         // We are on the Bukkit server.
+	    System.out.println("sent packet");
+		}
+	     // We are on the Bukkit server.
+	}
+	public static double getRenderRadius(int n, int type){
+    	if(type == 2) return (Math.pow(n/64, 1.0/3.0)) * .4;
+
+    	if(type == 1) return (Math.pow(n/1000, 1.0/3.0)) * .4;
+    	
+    	if(type == 0) return (Math.pow(n/100, 1.0/3.0)) * .2;
+    	return 0;
     }
-    
-    public void updateEntity()
-    {
-        if (this.worldObj != null && !this.worldObj.isRemote && this.type != null)
-        {
-            if(tick == 100){
-            	tick = 0;
-            	this.getNetwork();
-            	sendPacket();
-            }
-            if(this.type == "Energy"){
-            	this.sendEnergy();
-            }
-            else if(this.type == "Liquid"){
-            	this.sendLiquid();
-            }
-            else if(this.type == "Item"){
-            	this.sendItems();
-            }
-            tick++;
-            if(this.itemstack != null){
-            	if(this.itemstack.stackSize == 0){
-            		this.itemstack = null;
-            	}
-            }
-            if(this.liquid != null){
-            	if(this.liquid.amount == 0){
-            		this.liquid = null;
-            	}
-            }
-        }
+    public void setType(String Type, int range, int capacity){
+    	this.type = Type;
+    	this.range = range;
+    	this.capacity = capacity;
     }
-	    public boolean canStore(ItemStack stack, LiquidStack Stack, double energy){
+    public boolean canStore(ItemStack stack, FluidStack Stack, double energy){
 	    	if(this.type == "Item"){
 	    		if(this.itemstack == null){
 	    			return true;
@@ -199,7 +196,7 @@ public class node extends TileEntity{
 	    		if(this.liquid == null){
 	    			return true;
 	    		}
-	    		if(this.liquid.isLiquidEqual(Stack) && this.liquid.amount + Stack.amount <= this.capacity){
+	    		if(this.liquid.isFluidEqual(Stack) && this.liquid.amount + Stack.amount <= this.capacity){
 	    			return true;
 	    		}
 	    	}
@@ -226,7 +223,7 @@ public class node extends TileEntity{
 	    	return false;
 	    }
 	    //todo finish functions below
-	    public boolean addLiquid(LiquidStack stack){
+	    public boolean addLiquid(FluidStack stack){
 	    	if(canStore(null, stack, 0)){
 	    		if(this.liquid != null){
 		    		this.liquid.amount = this.liquid.amount + stack.amount;
@@ -294,7 +291,7 @@ public class node extends TileEntity{
 						    							this.liquid = other_node.liquid;
 						    							this.liquid.amount = 0;
 						    						}
-				    						if((other_node.liquid.itemID == this.liquid.itemID && other_node.liquid.itemMeta == this.liquid.itemMeta) || other_node.liquid == null){
+				    						if((other_node.liquid.getFluid().getBlockID() == this.liquid.getFluid().getBlockID()) || other_node.liquid == null){
 				    							join(x, y, z);
 				    						}
 				    					}
@@ -379,7 +376,7 @@ public class node extends TileEntity{
 	    	int m = 0;
 	    	for(int i = 0; i < length; i++){
 	    		n = (int)((double)group[i].capacity * (double)addPercent/(double)capacity);
-	    			group[i].liquid = (new LiquidStack(this.liquid.itemID, n, this.liquid.itemMeta));
+	    			group[i].liquid = (new FluidStack(this.liquid.getFluid().getBlockID(), n));
 
 	    		m = m + n;
 	    	}

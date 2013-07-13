@@ -18,7 +18,8 @@ public class commonProxy implements IGuiHandler{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	public void registerRenderInformation(){}
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world,
 			int x, int y, int z) {

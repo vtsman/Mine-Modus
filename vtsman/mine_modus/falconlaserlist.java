@@ -1,8 +1,11 @@
 package vtsman.mine_modus;
 
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
 public class falconlaserlist {
-public static falconlaserlist list;
-public void init(){
-	this.list = this;
+public static List<EntityPlayer> FalconList;
+public static void save(){
+	
 }
 }

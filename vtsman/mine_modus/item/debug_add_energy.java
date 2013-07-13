@@ -7,8 +7,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenVillage;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import vtsman.mine_modus.client.clientProxy;
 import vtsman.mine_modus.tileentity.node;
 
@@ -25,17 +25,23 @@ public class debug_add_energy extends Item{
 	    if((node)world.getBlockTileEntity(x, y, z) != null && !world.isRemote){
 	    	node Node = (node)world.getBlockTileEntity(x, y, z);
 	    	if(Node != null){
+	    		if(Node instanceof node){
 	    	if(Node.type == "Energy"){
 	    		Node.addEnergy(5);
 	    	}
-	    	if(Node.type == "Item"){
+	    	else if(Node.type == "Item"){
 	    		Node.addItems(new ItemStack(Block.stone, 5));
 	    	}
-	    	if(Node.type == "Liquid"){
-	    		LiquidStack liquidstack = new LiquidStack(Block.waterStill, LiquidContainerRegistry.BUCKET_VOLUME/100);
+	    	else if(Node.type == "Liquid"){
+	    		FluidStack liquidstack = new FluidStack(Block.waterStill.blockID, 100);
 	    		Node.addLiquid(liquidstack);
 	    	}
+	    	else{
+	    		player.addChatMessage("Oh noes! This node doesn't look right >.<");
+	    	}
+	    	return true;
 	    }
+	    	}
 	    }
 		return false;
 	}

@@ -15,9 +15,9 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 
 public class upgrade extends Item{
-	public static final String storage = "mine_modus:storageupgrade";
-	public static final String range = "mine_modus:rangeupgrade";
-	public static final String battery = "mine_modus:batteryupgrade";
+	public static final String storage =  clientProxy.TEXTURES + "storageupgrade";
+	public static final String range = clientProxy.TEXTURES + "rangeupgrade";
+	public static final String battery = clientProxy.TEXTURES + "batteryupgrade";
 	public Icon[] icon = new Icon[9];
 	public String[] itemMetaNames = {"Tier 1 Storage Upgrade", "Tier 2 Storage Upgrade", "Tier 3 Storage Upgrade", "Tier 1 Range Upgrade", "Tier 2 Range Upgrade", "Tier 3 Range Upgrade", "Tier 1 Battery Upgrade", "Tier 2 Battery Upgrade", "Tier 3 Battery Upgrade"};
 	public upgrade(int par1) {

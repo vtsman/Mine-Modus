@@ -4,9 +4,11 @@ import vtsman.mine_modus.baseMod;
 import vtsman.mine_modus.tileentity.Quantum_Materializer_TE;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -16,6 +18,7 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
+import vtsman.mine_modus.client.models.NodeTable;
 import vtsman.mine_modus.client.models.Quantum_Materializer_model;
 
 import java.io.IOException;
@@ -24,13 +27,13 @@ import java.util.Random;
 
 public class Quantum_Materializer_TE_Renderer extends TileEntitySpecialRenderer{
 	RenderItem renderitem = (RenderItem)RenderManager.instance.getEntityClassRenderObject(EntityItem.class);
-	private Quantum_Materializer_model model;
+	private ModelBase model;
 	  public static final Quantum_Materializer_TE_Renderer instance = new Quantum_Materializer_TE_Renderer();
 public Quantum_Materializer_TE_Renderer(){
 model = new Quantum_Materializer_model();
+	//model = new NodeTable();
 }
 public ItemStack stack;
-static Class<Quantum_Materializer_TE> TE = Quantum_Materializer_TE.class;
 public void renderAModelAt(Quantum_Materializer_TE tile, double d, double d1, double d2, float f) {
 
 int rotation = 0;
@@ -38,12 +41,13 @@ if(tile.worldObj != null)
 {
 rotation = tile.getBlockMetadata();
 }
-bindTextureByName("/vtsman/mine_modus/client/models/Quantum Materializer.png"); //texture
+//bindTextureByName("/vtsman/mine_modus/client/models/Node Table.png");
+this.func_110628_a(new ResourceLocation("/vtsman/mine_modus/client/models/Quantum Materializer.png")); //texture
 GL11.glPushMatrix();
 GL11.glTranslatef((float)d + 0.5F, (float)d1 + 1.5F, (float)d2 + 0.5F);
 GL11.glScalef(1.0F, -1F, -1F);
 GL11.glRotatef(rotation*90, 0.0F, 1.0F, 0.0F);
-model.renderAll();
+((Quantum_Materializer_model)model).renderAll();
 GL11.glPopMatrix(); //end
 }
 
@@ -76,7 +80,6 @@ public void renderTileEntityAt(TileEntity tileentity, double d0, double d1,
 				 entityitem.setEntityItemStack(new ItemStack(TE.getStackInSlot(0).itemID, 1, TE.getStackInSlot(0).getItemDamage()));
 				 
 				renderitem.doRenderItem(entityitem, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
-				GL11.glRotatef((float)TE.angle/(float)360, 1, 0, 0);
 			 }
 			 }
 	GL11.glScaled(1.0D / 1, 1.0D / 1, 1.0D / 1);

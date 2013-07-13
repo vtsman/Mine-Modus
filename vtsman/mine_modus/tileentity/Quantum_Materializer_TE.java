@@ -204,14 +204,6 @@ public class Quantum_Materializer_TE extends TileEntity implements IInventory{
                         return "mod.vtsman_hodgecraft.shelfTE";
                 }
 
-				public boolean func_94042_c() {
-					// TODO Auto-generated method stub
-					return false;
-				}
-				public boolean func_94041_b(int i, ItemStack itemstack) {
-					// TODO Auto-generated method stub
-					return false;
-				}
 
 				@Override
 				public boolean isInvNameLocalized() {
@@ -220,11 +212,11 @@ public class Quantum_Materializer_TE extends TileEntity implements IInventory{
 				}
 
 				@Override
-				public boolean isStackValidForSlot(int i, ItemStack itemstack) {
+				public boolean isItemValidForSlot(int i, ItemStack itemstack) {
 					if(itemstack != null && inv[0] != null){
-					return itemstack.stackSize + inv[0].stackSize <= this.getInventoryStackLimit() && itemstack.itemID == inv[0].itemID && itemstack.getItemDamage() == inv[0].getItemDamage();
-					}
-					return true;
+						return itemstack.stackSize + inv[0].stackSize <= this.getInventoryStackLimit() && itemstack.itemID == inv[0].itemID && itemstack.getItemDamage() == inv[0].getItemDamage();
+						}
+						return true;
 				}
 
 
